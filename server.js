@@ -26,6 +26,10 @@ const onlineClients = function(listOfClients) {
   }
   return idList;
 };
+function help() {
+  const help = '{"type": "JSON", "document": {"onlineList": "*online#", "help":"*help#"}}'
+  return help;
+}
 
 server.on('connection',(socket) => {
   socket.setEncoding('utf8');
@@ -35,16 +39,18 @@ server.on('connection',(socket) => {
 
   console.log(`${socket.id} is connected to the server.`);
 
-  socket.write(`🔺 ID ${socket.id}, you are connected. 🔻`); // write
-  socket.write(`\n🔺 Online users: ${onlineClients(listOfClients)} 🔻`);
+  socket.write(`🔺🔻 ID ${socket.id}, you are connected.`); // write
+  socket.write(`\n🔺🔻 insert *help# for help document.`);
 
   broadcastMessage(`🔸🔸 joined.`,socket,listOfClients);
   
   
   socket.on('data', message => { // listen for data
     console.log(`${socket.id}: ${message}`);
-    if (message == '*123#') { // Why not worksssssssss!!
-      socket.write(`Online user: ${onlineClients}`);
+    if (message.replace(/\n/g, '') === '*online#') { // we have \n at the end of input message that we have to remove first then compare!
+      socket.write(`🔺🔻 Online users: ${onlineClients(listOfClients)}`);
+    } else if (message.replace(/\n/g, '') === '*help#') { // we have \n at the end of input message that we have to remove first then compare!
+      socket.write(help());
     } else {
       broadcastMessage(message,socket,listOfClients);
     }

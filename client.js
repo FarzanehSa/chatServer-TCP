@@ -22,10 +22,14 @@ rl.on('line', (input) => { // listen to any input event (return character)!
 });
 
 client.on('data', message => { // write
-  console.log(message);
+  if (message.includes('"type": "JSON"')) {
+    console.log(JSON.parse(message).document);
+  } else {
+    console.log(message);
+  }
 });
 
 client.on('end', () => {  // server disconnect
-  console.log('🔺 server disconnected 🔻');
+  console.log('🔺🔻 server disconnected');
   rl.close();
 });
